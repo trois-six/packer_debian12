@@ -1,0 +1,232 @@
+#
+# Localization
+#
+d-i debian-installer/locale string fr_FR.UTF-8
+
+#
+# Keyboard
+#
+d-i keyboard-configuration/xkb-keymap select fr(latin9)
+keyboard-configuration keyboard-configuration/xkb-keymap select fr(latin9)
+
+#
+# Network
+#
+d-i netcfg/choose_interface select auto
+d-i netcfg/get_hostname string debian
+d-i netcfg/get_domain string home
+d-i hw-detect/load_firmware boolean true
+
+#
+# Install Mirror
+#
+d-i mirror/country string manual
+d-i mirror/http/hostname string deb.debian.org
+d-i mirror/http/directory string /debian
+d-i mirror/http/proxy string
+d-i mirror/codename string bookworm
+d-i mirror/suite string bookworm
+d-i mirror/udeb/suite string bookworm
+
+#
+# Clock
+#
+d-i clock-setup/utc boolean true
+d-i time/zone string Etc/UTC
+
+#
+# Disk
+#
+d-i partman-auto-lvm/guided_size string max
+d-i partman-auto-lvm/new_vg_name string vg_00
+d-i partman-auto-lvm/no_boot boolean true
+d-i partman-auto/method string lvm
+d-i partman-basicfilesystems/choose_label string gpt
+d-i partman-basicfilesystems/default_label string gpt
+d-i partman-basicfilesystems/no_swap true
+d-i partman/choose_label string gpt
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+d-i partman/confirm_write_new_label boolean true
+d-i partman/default_label string gpt
+d-i partman-lvm/confirm boolean true
+d-i partman-lvm/confirm_nooverwrite boolean true
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-md/confirm boolean true
+d-i partman-md/confirm_nooverwrite boolean true
+d-i partman-md/device_remove_md boolean true
+d-i partman-partitioning/choose_label string gpt
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman-partitioning/default_label string gpt
+d-i partman-efi/non_efi_system true
+d-i partman-auto/expert_recipe string                         \
+      boot-root ::                                            \
+              1 10 1 free                                     \
+                      $gptonly{ }                             \
+                      $primary{ }                             \
+                      method{ biosgrub }                      \
+                      $bios_boot{ }                           \
+              .                                               \
+              250 20 250 fat32                                \
+                      $gptonly{ }                             \
+                      $primary{ }                             \
+                      $bootable{ }                            \
+                      method{ efi }                           \
+                      format{ }                               \
+                      mountpoint{ /boot/efi }                 \
+                      label{ EFI }                            \
+              .                                               \
+              1 30 -1 lvm                                     \
+                      $gptonly{ }                             \
+                      $primary{ }                             \
+                      method{ lvm }                           \
+                      vg_name{ vg_00 }                        \
+              .                                               \
+              512 200% 8192 linux-swap                        \
+                      $lvmok{ }                               \
+                      method{ swap }                          \
+                      format{ }                               \
+                      lv_name{ lv_swap00 }                    \
+                      in_vg{ vg_00 }                          \
+              .                                               \
+              5120 120 5120 ext4                              \
+                      $lvmok{ }                               \
+                      method{ format }                        \
+                      format{ }                               \
+                      mountpoint{ /var }                      \
+                      use_filesystem{ }                       \
+                      filesystem{ ext4 }                      \
+                      lv_name{ lv_var00 }                     \
+                      in_vg{ vg_00 }                          \
+                      label{ var00 }                          \
+              .                                               \
+              3072 130 3072 ext4                              \
+                      $lvmok{ }                               \
+                      method{ format }                        \
+                      format{ }                               \
+                      mountpoint{ /var/log }                  \
+                      use_filesystem{ }                       \
+                      filesystem{ ext4 }                      \
+                      lv_name{ lv_var_log00 }                 \
+                      in_vg{ vg_00 }                          \
+                      label{ var_log00 }                      \
+              .                                               \
+              3072 140 3072 ext4                              \
+                      $lvmok{ }                               \
+                      method{ format }                        \
+                      format{ }                               \
+                      mountpoint{ /usr }                      \
+                      use_filesystem{ }                       \
+                      filesystem{ ext4 }                      \
+                      lv_name{ lv_usr00 }                     \
+                      in_vg{ vg_00 }                          \
+                      label{ usr00 }                          \
+              .                                               \
+              1024 150 1024 ext4                              \
+                      $lvmok{ }                               \
+                      method{ format }                        \
+                      format{ }                               \
+                      mountpoint{ /tmp }                      \
+                      use_filesystem{ }                       \
+                      filesystem{ ext4 }                      \
+                      lv_name{ lv_tmp00 }                     \
+                      in_vg{ vg_00 }                          \
+                      label{ tmp00 }                          \
+              .                                               \
+              2048 160 2048 ext4                              \
+                      $lvmok{ }                               \
+                      method{ format }                        \
+                      format{ }                               \
+                      mountpoint{ /home }                     \
+                      use_filesystem{ }                       \
+                      filesystem{ ext4 }                      \
+                      lv_name{ lv_home00 }                    \
+                      in_vg{ vg_00 }                          \
+                      label{ home00 }                         \
+              .                                               \
+              1024 180 1024 ext4                              \
+                      $lvmok{ }                               \
+                      method{ format }                        \
+                      format{ }                               \
+                      mountpoint{ /opt }                      \
+                      use_filesystem{ }                       \
+                      filesystem{ ext4 }                      \
+                      lv_name{ lv_opt00 }                     \
+                      in_vg{ vg_00 }                          \
+                      label{ opt00 }                          \
+              .                                               \
+              1024 170 1024 ext4                              \
+                      $lvmok{ }                               \
+                      method{ format }                        \
+                      format{ }                               \
+                      mountpoint{ / }                         \
+                      use_filesystem{ }                       \
+                      filesystem{ ext4 }                      \
+                      lv_name{ lv_root00 }                    \
+                      in_vg{ vg_00 }                          \
+                      label{ root00 }                         \
+              .                                               \
+              1 200 -1 free                                   \
+                      $lvmok{ }                               \
+                      lv_name{ lv_empty00 }                   \
+                      in_vg{ vg_00 }                          \
+              .
+#
+# Base system
+#
+d-i base-installer/kernel/image string linux-image-amd64
+d-i base-installer/kernel/linux/initramfs-tools/driver-policy string most
+
+#
+# Accounts
+#
+d-i passwd/root-login boolean false
+d-i passwd/user-fullname string debian
+d-i passwd/username string debian
+d-i passwd/user-password password debian
+d-i passwd/user-password-again password debian
+d-i user-setup/encrypt-home boolean false
+
+#
+# Apt setup
+#
+d-i apt-setup/main boolean true
+d-i apt-setup/contrib boolean true
+d-i apt-setup/non-free boolean true
+d-i apt-setup/use_mirror boolean true
+d-i apt-setup/no_mirror boolean false
+d-i apt-setup/services-select multiselect security, updates
+d-i apt-setup/security_host string security.debian.org
+
+#
+# Other questions
+#
+d-i popularity-contest/participate boolean false
+
+#
+# Package selection
+#
+tasksel tasksel/first multiselect standard, ssh-server
+d-i pkgsel/include string openssh-server vim less sudo qemu-guest-agent unattented-upgrades
+d-i pkgsel/upgrade select full-upgrade
+
+#
+# Boot loader installation
+#
+d-i grub-installer/only_debian boolean true
+d-i grub-installer/with_other_os boolean true
+d-i grub-installer/choose_bootdev select /dev/vda
+d-i finish-install/reboot_in_progress note
+
+#
+# Preseeding other packages
+#
+man-db man-db/auto-update boolean false
+man-db man-db/install-setuid boolean false
+unattended-upgrades unattended-upgrades/enable_auto_updates boolean true
+
+#
+# Advanced options
+#
+#d-i preseed/late_command string echo "deb [arch=amd64] https://deb.debian.org/debian bookworm-backports main contrib non-free" > /target/etc/apt/sources.list.d/bookworm-backports.list && in-target apt-get update && in-target apt-get install -y -t bookworm-backports linux-image-amd64 && rm -f /target/etc/apt/sources.list.d/bookworm-backports.list && in-target apt-get update
