@@ -28,6 +28,7 @@ source "qemu" "debian12" {
   boot_wait         = "2s"
   disk_interface    = "virtio"
   disk_size         = "${var.disk_size}"
+  memory            = 1024
   format            = "qcow2"
   headless          = false
   http_directory    = "."
