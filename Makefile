@@ -7,7 +7,7 @@ help: ## This help.
 
 all: bake
 bake: ## Create packer img
-	@rm -rf img && packer build debian12.pkr.hcl
+	@rm -rf img && packer init && packer build debian12.pkr.hcl
 
 clean: ## Remove img
 	rm -f img
